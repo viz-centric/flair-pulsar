@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  flair-pulsar-pgsql:
+    image: postgres:9.4-alpine
+    labels:
+      environment: staging
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=admin
+    - POSTGRES_DB=pulsar_db
+    ports:
+    - 5190:5432
+
