@@ -1,7 +1,8 @@
-import {Injectable, Logger} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import * as grpc from 'grpc';
 import {ConfigService} from "./../../config/config.service";
 import {RpcConfigService} from "./../rpcconfig/rpc-config.service";
+import {msg} from "../../utils/logging/logging.service";
 
 @Injectable()
 export class RpcServerService {
@@ -9,16 +10,24 @@ export class RpcServerService {
     private protoMapping = {
         publishPulse: this.publishPulse,
     };
+    private server: grpc.Server;
 
     constructor(private readonly configService: ConfigService,
                 private readonly rpcConfig: RpcConfigService) {
-        let server = new grpc.Server();
+    }
+
+    startServer() {
+        this.server = new grpc.Server();
         let credentials = this.rpcConfig.createServerCredentials();
         let protoService = this.rpcConfig.getProtoService('PulsarService');
         let rpcUrl = this.rpcConfig.getRpcUrl();
-        server.addService(protoService, this.protoMapping);
-        server.bind(rpcUrl, credentials);
-        server.start();
+        this.server.addService(protoService, this.protoMapping);
+        this.server.bind(rpcUrl, credentials);
+        this.server.start();
+
+        msg(`gRPC server created on ${rpcUrl}`);
+
+        return this.server;
     }
 
     /**
@@ -31,9 +40,12 @@ export class RpcServerService {
         let pulseBody = request.pulseBody;
         let pulseConfig = request.pulseConfig;
 
-        Logger.log(`Publish pulse grpc handler called ${pulseHeader} ${pulseConfig} ${pulseBody}`);
+        msg(`Publish pulse grpc handler called`, {pulseBody, pulseHeader, pulseConfig});
 
-        callback(null, request);
+        callback(null, {});
     }
 
+    stop() {
+        this.server.forceShutdown();
+    }
 }

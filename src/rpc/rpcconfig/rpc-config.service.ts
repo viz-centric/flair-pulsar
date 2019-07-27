@@ -39,6 +39,6 @@ export class RpcConfigService {
     }
 
     getRpcUrl() {
-        return `0.0.0.0:${this.configService.get('GRPC_PORT')}`;
+        return `localhost:${this.configService.get('GRPC_PORT')}`;
     }
 }
