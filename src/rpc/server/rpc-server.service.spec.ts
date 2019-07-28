@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {RpcServerService} from './rpc-server.service';
-import {RpcConfigService} from "../rpcconfig/rpc-config.service";
 import {ConfigService} from "../../config/config.service";
+import {RpcConfigService} from "../config/rpc-config.service";
 
 describe('RpcServerService', () => {
   let service: RpcServerService;

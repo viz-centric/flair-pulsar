@@ -1,8 +1,8 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {AppModule} from '../src/app.module';
-import {RpcClientService} from "../src/rpc/rpcclient/rpc-client.service";
 import {Client} from "grpc";
 import {RpcServerService} from "../src/rpc/server/rpc-server.service";
+import {RpcClientService} from "../src/rpc/client/rpc-client.service";
 
 describe('AppController (e2e)', () => {
   let app;
@@ -21,9 +21,6 @@ describe('AppController (e2e)', () => {
 
     rpcServerService = moduleFixture.get<RpcServerService>(RpcServerService);
     rpcClientService = moduleFixture.get<RpcClientService>(RpcClientService);
-
-    rpcServerService.startServer();
-    client = rpcClientService.createClient();
   });
 
   afterEach(() => {
@@ -32,17 +29,41 @@ describe('AppController (e2e)', () => {
   });
 
   it('should return empty pulse when pulse request succeeded', () => {
-    let request = {
+    let request = createPulseRequest();
+    rpcServerService.startServer();
+    client = rpcClientService.createClient();
+    return rpcClientService.publishPulse(request)
+      .then((data) => {
+        expect(data).toEqual({});
+      })
+      .catch(error => {
+        expect(error).toEqual('some custom error never called');
+      });
+  });
+
+  it('should return error when grpc pulse request fails', function () {
+    let request = createPulseRequest();
+    rpcServerService.setupHandlers({
+      publishPulse: (call, callback)=> {
+        callback({error: 'error name'}, null);
+      }
+    });
+    rpcServerService.startServer();
+    client = rpcClientService.createClient();
+    return rpcClientService.publishPulse(request)
+      .then((data) => {
+        expect(data).toEqual('success should be never called');
+      })
+      .catch(error => {
+        expect(error.code).toEqual(2);
+      });
+  });
+
+  function createPulseRequest() {
+    return {
       pulseHeader: {service: 'my service'},
       pulseBody: {summary: 'some summary', eventData: {custom: 'field'}},
       pulseConfig: {log: true, ttl: 111}
     };
-    return rpcClientService.publishPulse(request)
-      .catch(error => {
-        expect(error).toEqual('some custom error never called');
-      })
-      .then((data) => {
-        expect(data).toEqual({});
-      });
-  });
+  }
 });

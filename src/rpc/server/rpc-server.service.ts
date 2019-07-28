@@ -1,8 +1,8 @@
 import {Injectable} from '@nestjs/common';
 import * as grpc from 'grpc';
 import {ConfigService} from "./../../config/config.service";
-import {RpcConfigService} from "./../rpcconfig/rpc-config.service";
 import {msg} from "../../utils/logging/logging.service";
+import {RpcConfigService} from "../config/rpc-config.service";
 
 @Injectable()
 export class RpcServerService {
@@ -28,6 +28,10 @@ export class RpcServerService {
         msg(`gRPC server created on ${rpcUrl}`);
 
         return this.server;
+    }
+
+    setupHandlers(map) {
+        this.protoMapping = map;
     }
 
     /**

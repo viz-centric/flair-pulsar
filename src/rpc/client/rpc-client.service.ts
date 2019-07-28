@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
-import {RpcConfigService} from "../rpcconfig/rpc-config.service";
 import {Client} from "grpc";
 import {msg} from "../../utils/logging/logging.service";
+import {RpcConfigService} from "../config/rpc-config.service";
 
 @Injectable()
 export class RpcClientService {
