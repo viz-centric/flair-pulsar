@@ -1,13 +1,13 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {IncomingEventService} from './incoming-event.service';
-import {DatabaseModule} from "../database.module";
+import {AppModule} from "../../app.module";
 
 describe('IncomingEventService', () => {
   let service: IncomingEventService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DatabaseModule],
+      imports: [AppModule],
     }).compile();
 
     service = module.get<IncomingEventService>(IncomingEventService);

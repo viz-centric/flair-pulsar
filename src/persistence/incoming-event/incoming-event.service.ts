@@ -5,10 +5,17 @@ import {IncomingEvent} from "./incoming-event.entity";
 
 @Injectable()
 export class IncomingEventService {
-  constructor(@InjectRepository(IncomingEvent) private readonly incomingEventRepository: Repository<IncomingEvent>) {
+  constructor(
+    @InjectRepository(IncomingEvent)
+    private readonly incomingEventRepository: Repository<IncomingEvent>
+  ) {
   }
 
-  findAll(): Promise<IncomingEvent[]> {
-    return this.incomingEventRepository.find();
+  async findAll(): Promise<IncomingEvent[]> {
+    return await this.incomingEventRepository.find();
+  }
+
+  async create(event: IncomingEvent): Promise<IncomingEvent> {
+    return await this.incomingEventRepository.save(event);
   }
 }

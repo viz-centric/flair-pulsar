@@ -1,4 +1,5 @@
 import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {IncomingEventLogType} from "./incoming-event-log-type";
 
 @Entity()
 export class IncomingEvent {
@@ -21,5 +22,11 @@ export class IncomingEvent {
   serviceName: string;
 
   @Column({type: 'jsonb', nullable: true})
-  problems: object;
+  eventData: object;
+
+  @Column('text')
+  logType: IncomingEventLogType;
+
+  @Column()
+  ttl: number;
 }
