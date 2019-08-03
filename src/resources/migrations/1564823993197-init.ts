@@ -7,14 +7,14 @@ export class init1564823993197 implements MigrationInterface {
         CREATE TABLE incoming_event
         (
             id           BIGSERIAL PRIMARY KEY NOT NULL,
-            created_at   TIMESTAMPTZ           NOT NULL,
-            updated_at   TIMESTAMPTZ           NOT NULL,
+            created_at   TIMESTAMPTZ           NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at   TIMESTAMPTZ           NOT NULL DEFAULT CURRENT_TIMESTAMP,
             summary      TEXT                  NOT NULL,
             event_time   TIMESTAMPTZ           NOT NULL,
             service_name VARCHAR(255)          NOT NULL,
-            logType      VARCHAR(30)           NOT NULL,
+            log_type     VARCHAR(30)           NOT NULL,
             ttl          integer               NOT NULL,
-            eventData    JSONB
+            event_data   JSONB
         )
     `);
     await queryRunner.query(`CREATE INDEX idx_incoming_event_event_time ON incoming_event (event_time)`);

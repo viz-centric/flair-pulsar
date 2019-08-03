@@ -12,4 +12,8 @@ export class DatabaseService {
   async close() {
     await this.connection.close();
   }
+
+  isConnected(): boolean {
+    return this.connection.isConnected;
+  }
 }

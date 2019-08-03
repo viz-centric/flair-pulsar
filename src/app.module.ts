@@ -33,4 +33,11 @@ import {DatabaseService} from './persistence/database/database.service';
   ],
 })
 export class AppModule {
+
+  constructor(private readonly databaseService: DatabaseService) {
+  }
+
+  async shutdown() {
+    await this.databaseService.close();
+  }
 }

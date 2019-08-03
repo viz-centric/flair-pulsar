@@ -15,7 +15,11 @@ export class IncomingEventService {
     return await this.incomingEventRepository.find();
   }
 
-  async create(event: IncomingEvent): Promise<IncomingEvent> {
+  async find(id: number): Promise<IncomingEvent> {
+    return await this.incomingEventRepository.findOne(id);
+  }
+
+  async save(event: IncomingEvent): Promise<IncomingEvent> {
     return await this.incomingEventRepository.save(event);
   }
 }

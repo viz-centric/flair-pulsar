@@ -3,6 +3,7 @@ import {IncomingEventLogType} from "../../persistence/incoming-event/incoming-ev
 import {msg} from "../../utils/logging/logging.service";
 import {IncomingEventService} from "../../persistence/incoming-event/incoming-event.service";
 import {Injectable} from "@nestjs/common";
+import {DateUtils} from "../../utils/date-utils";
 
 @Injectable()
 export class PulseService {
@@ -12,20 +13,20 @@ export class PulseService {
   ) {
   }
 
-  handlePulse(pulseConfig: any, pulseHeader: any, pulseBody: any) {
+  async handlePulse(pulseConfig: any, pulseHeader: any, pulseBody: any) {
+    let seconds: number = pulseHeader.eventTime.seconds;
+    let nanos: number = pulseHeader.eventTime.nanos;
+
     let event = new IncomingEvent();
     event.summary = pulseBody.summary;
-    event.eventTime = pulseHeader.eventTime;
+    event.eventTime = DateUtils.toDateFromSecondsAndNanos(seconds, nanos);
     event.serviceName = pulseHeader.service;
     event.logType = pulseConfig.log ? IncomingEventLogType.ON : IncomingEventLogType.OFF;
     event.ttl = pulseConfig.ttl;
+    event.eventData = pulseBody.eventData;
 
-    this.incomingMessageService.create(event)
-      .then((data) => {
-        msg(`incoming message saved ${data}`);
-      })
-      .catch((error) => {
-        msg(`error saving incoming message ${error}`);
-      });
+    let savedMessage = await this.incomingMessageService.save(event);
+
+    msg(`incoming message saved ${savedMessage}`);
   }
 }

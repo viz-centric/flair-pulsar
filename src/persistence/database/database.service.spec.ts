@@ -13,7 +13,9 @@ describe('DatabaseService', () => {
     service = module.get<DatabaseService>(DatabaseService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('should close connection', async () => {
+    expect(service.isConnected()).toBeTruthy();
+    await service.close();
+    expect(service.isConnected()).toBeFalsy();
   });
 });
