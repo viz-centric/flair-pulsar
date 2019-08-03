@@ -3,12 +3,14 @@ import {AppModule} from '../src/app.module';
 import {Client} from "grpc";
 import {RpcServerService} from "../src/rpc/server/rpc-server.service";
 import {RpcClientService} from "../src/rpc/client/rpc-client.service";
+import {DatabaseService} from "../src/persistence/database/database.service";
 
 describe('AppController (e2e)', () => {
   let app;
   let rpcClientService: RpcClientService;
   let rpcServerService: RpcServerService;
   let client: Client;
+  let databaseService: DatabaseService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -21,11 +23,13 @@ describe('AppController (e2e)', () => {
 
     rpcServerService = moduleFixture.get<RpcServerService>(RpcServerService);
     rpcClientService = moduleFixture.get<RpcClientService>(RpcClientService);
+    databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
 
   afterEach(() => {
     rpcServerService.stop();
     rpcClientService.stop();
+    databaseService.close();
   });
 
   it('should return empty pulse when pulse request succeeded', () => {

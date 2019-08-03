@@ -8,8 +8,8 @@ import {PulseService} from "../pulse/pulse.service";
 @Injectable()
 export class RpcServerService {
 
-    private protoMapping = {
-        publishPulse: this.publishPulse,
+    private protoMapping: object = {
+        publishPulse: this.publishPulse.bind(this),
     };
     private server: grpc.Server;
 
@@ -32,8 +32,8 @@ export class RpcServerService {
         return this.server;
     }
 
-    setupHandlers(map) {
-        this.protoMapping = map;
+    setupHandlers(map: object) {
+        this.protoMapping = {...this.protoMapping, ...map};
     }
 
     /**

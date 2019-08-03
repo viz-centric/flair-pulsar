@@ -10,6 +10,7 @@ import {IncomingEvent} from "./persistence/incoming-event/incoming-event.entity"
 import {PulseService} from "./rpc/pulse/pulse.service";
 import {RpcServerService} from "./rpc/server/rpc-server.service";
 import {RpcConfigService} from "./rpc/config/rpc-config.service";
+import {DatabaseService} from './persistence/database/database.service';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import {RpcConfigService} from "./rpc/config/rpc-config.service";
     IncomingEventService,
     PulseService,
     RpcServerService,
-    RpcConfigService
+    RpcConfigService,
+    DatabaseService,
   ],
 })
 export class AppModule {
