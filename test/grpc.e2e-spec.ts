@@ -39,10 +39,10 @@ describe('AppController (e2e)', () => {
   });
 
   it('should return empty pulse when pulse request succeeded', async () => {
-    let itemId: number = new Date().getTime();
+    let currentTime = new Date();
+    let itemId: number = currentTime.getTime();
     let summary = `some summary ${itemId}`;
     let request = createPulseRequest(itemId);
-    let currentTime = new Date();
 
     rpcServerService.startServer();
     client = rpcClientService.createClient();

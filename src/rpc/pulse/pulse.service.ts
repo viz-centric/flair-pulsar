@@ -27,9 +27,9 @@ export class PulseService {
 
     try {
       let savedMessage = await this.incomingMessageService.save(event);
-      msg(  `incoming message saved ${savedMessage}`);
+      msg(  `incoming message saved`, savedMessage);
     } catch (e) {
-      msg(`failed saving incoming message ${event}`, e);
+      msg(`failed saving incoming message`, event, e);
     }
   }
 }

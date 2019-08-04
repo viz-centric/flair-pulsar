@@ -3,7 +3,6 @@ import {ConfigService} from './config/config.service';
 import {LoggingService} from './utils/logging/logging.service';
 import {RpcClientModule} from "./rpc/client/rpc-client.module";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {RpcServerModule} from "./rpc/server/rpc-server.module";
 import {Module} from "@nestjs/common";
 import {IncomingEventService} from "./persistence/incoming-event/incoming-event.service";
 import {IncomingEvent} from "./persistence/incoming-event/incoming-event.entity";
@@ -16,8 +15,7 @@ import {DatabaseService} from './persistence/database/database.service';
   imports: [
     TypeOrmModule.forRoot(),
     TypeOrmModule.forFeature([IncomingEvent]),
-    RpcClientModule,
-    RpcServerModule
+    RpcClientModule
   ],
   controllers: [
     AppController
