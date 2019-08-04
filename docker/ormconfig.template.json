@@ -1,0 +1,14 @@
+{
+  "type": "postgres",
+  "host": "$DATABASE_HOST",
+  "port": $DATABASE_PORT,
+  "username": "$DATABASE_USERNAME",
+  "password": "$DATABASE_PASSWORD",
+  "database": "pulsar_db",
+  "entities": ["src/**/*.entity{.ts,.js}"],
+  "synchronize": false,
+  "migrations": ["src/resources/migrations/**/*.ts"],
+  "cli": {
+    "migrationsDir": "src/resources/migrations"
+  }
+}
