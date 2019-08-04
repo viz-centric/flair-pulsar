@@ -25,8 +25,11 @@ export class PulseService {
     event.ttl = pulseConfig.ttl;
     event.eventData = pulseBody.eventData;
 
-    let savedMessage = await this.incomingMessageService.save(event);
-
-    msg(`incoming message saved ${savedMessage}`);
+    try {
+      let savedMessage = await this.incomingMessageService.save(event);
+      msg(  `incoming message saved ${savedMessage}`);
+    } catch (e) {
+      msg(`failed saving incoming message ${event}`, e);
+    }
   }
 }
