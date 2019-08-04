@@ -1,19 +1,21 @@
 import {Injectable} from '@nestjs/common';
 import * as grpc from 'grpc';
-import {ConfigService} from "./../../config/config.service";
+import {ConfigService} from "../../config/config.service";
 import {msg} from "../../utils/logging/logging.service";
 import {RpcConfigService} from "../config/rpc-config.service";
+import {PulseService} from "../pulse/pulse.service";
 
 @Injectable()
 export class RpcServerService {
 
-    private protoMapping = {
-        publishPulse: this.publishPulse,
+    private protoMapping: object = {
+        publishPulse: this.publishPulse.bind(this),
     };
     private server: grpc.Server;
 
     constructor(private readonly configService: ConfigService,
-                private readonly rpcConfig: RpcConfigService) {
+                private readonly rpcConfig: RpcConfigService,
+                private readonly pulseService: PulseService) {
     }
 
     startServer() {
@@ -30,8 +32,8 @@ export class RpcServerService {
         return this.server;
     }
 
-    setupHandlers(map) {
-        this.protoMapping = map;
+    setupHandlers(map: object) {
+        this.protoMapping = {...this.protoMapping, ...map};
     }
 
     /**
@@ -45,6 +47,7 @@ export class RpcServerService {
         let pulseConfig = request.pulseConfig;
 
         msg(`Publish pulse grpc handler called`, {pulseBody, pulseHeader, pulseConfig});
+        this.pulseService.handlePulse(pulseConfig, pulseHeader, pulseBody);
 
         callback(null, {});
     }

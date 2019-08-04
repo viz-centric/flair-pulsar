@@ -1,14 +1,14 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {RpcServerService} from './rpc-server.service';
-import {ConfigService} from "../../config/config.service";
-import {RpcConfigService} from "../config/rpc-config.service";
+import {AppModule} from "../../app.module";
 
 describe('RpcServerService', () => {
   let service: RpcServerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RpcServerService, ConfigService, RpcConfigService],
+      imports: [AppModule],
+      providers: [],
     }).compile();
 
     service = module.get<RpcServerService>(RpcServerService);

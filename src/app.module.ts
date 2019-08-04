@@ -1,14 +1,41 @@
-import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {ConfigService} from './config/config.service';
-import {RpcServerService} from "./rpc/server/rpc-server.service";
 import {LoggingService} from './utils/logging/logging.service';
 import {RpcClientModule} from "./rpc/client/rpc-client.module";
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {Module} from "@nestjs/common";
+import {IncomingEventService} from "./persistence/incoming-event/incoming-event.service";
+import {IncomingEvent} from "./persistence/incoming-event/incoming-event.entity";
+import {PulseService} from "./rpc/pulse/pulse.service";
+import {RpcServerService} from "./rpc/server/rpc-server.service";
 import {RpcConfigService} from "./rpc/config/rpc-config.service";
+import {DatabaseService} from './persistence/database/database.service';
 
 @Module({
-  imports: [RpcClientModule],
-  controllers: [AppController],
-  providers: [ConfigService, RpcServerService, RpcConfigService, LoggingService],
+  imports: [
+    TypeOrmModule.forRoot(),
+    TypeOrmModule.forFeature([IncomingEvent]),
+    RpcClientModule
+  ],
+  controllers: [
+    AppController
+  ],
+  providers: [
+    ConfigService,
+    LoggingService,
+    IncomingEventService,
+    PulseService,
+    RpcServerService,
+    RpcConfigService,
+    DatabaseService,
+  ],
 })
-export class AppModule {}
+export class AppModule {
+
+  constructor(private readonly databaseService: DatabaseService) {
+  }
+
+  async shutdown() {
+    await this.databaseService.close();
+  }
+}
