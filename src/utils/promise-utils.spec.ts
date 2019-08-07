@@ -6,6 +6,8 @@ describe('PromiseUtils', () => {
     await PromiseUtils.wait(1000);
     let endTime: Date = new Date();
 
-    expect(endTime.getTime() - startTime.getTime()).toBeGreaterThanOrEqual(1000);
+    expect(endTime.getTime() - startTime.getTime()).toBeGreaterThanOrEqual(
+      1000,
+    );
   });
 });

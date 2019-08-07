@@ -8,7 +8,7 @@ COPY tsconfig*.json /flair-pulsar/
 COPY tslint.json /flair-pulsar/
 COPY nest-cli.json /flair-pulsar/
 COPY docker /flair-pulsar/
-COPY src /flair-pulsar/src/
+COPY dist /flair-pulsar/dist/
 COPY config /flair-pulsar/config/
 
 WORKDIR /flair-pulsar/

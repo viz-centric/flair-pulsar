@@ -1,4 +1,4 @@
 export enum IncomingEventLogType {
   ON = 'on',
-  OFF = 'off'
+  OFF = 'off',
 }

@@ -21,4 +21,4 @@ sleep 1
 
 echo "Starting server"
 
-npm run start
+npm run start:prod

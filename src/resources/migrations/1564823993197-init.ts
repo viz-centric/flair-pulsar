@@ -1,7 +1,6 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from 'typeorm';
 
 export class init1564823993197 implements MigrationInterface {
-
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
         CREATE TABLE incoming_event
@@ -17,12 +16,15 @@ export class init1564823993197 implements MigrationInterface {
             event_data   JSONB
         )
     `);
-    await queryRunner.query(`CREATE INDEX idx_incoming_event_event_time ON incoming_event (event_time)`);
-    await queryRunner.query(`CREATE INDEX idx_incoming_event_service_name ON incoming_event (service_name)`);
+    await queryRunner.query(
+      `CREATE INDEX idx_incoming_event_event_time ON incoming_event (event_time)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_incoming_event_service_name ON incoming_event (service_name)`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`DROP TABLE "incoming_event"`);
   }
-
 }
