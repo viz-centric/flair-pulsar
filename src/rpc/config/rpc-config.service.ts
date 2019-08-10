@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {ConfigService} from './../../config/config.service';
+import {ConfigService} from '../../config/config.service';
 import * as protoLoader from '@grpc/proto-loader';
 import * as grpc from 'grpc';
 

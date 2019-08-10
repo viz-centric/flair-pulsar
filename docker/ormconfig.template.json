@@ -5,10 +5,10 @@
   "username": "$DATABASE_USERNAME",
   "password": "$DATABASE_PASSWORD",
   "database": "pulsar_db",
-  "entities": ["src/**/*.entity{.ts,.js}"],
+  "entities": ["./src/**/*.entity{.ts,.js}"],
   "synchronize": false,
-  "migrations": ["src/resources/migrations/**/*.ts"],
+  "migrations": ["./src/resources/migrations/**/*.*"],
   "cli": {
-    "migrationsDir": "src/resources/migrations"
+    "migrationsDir": "./src/resources/migrations"
   }
 }

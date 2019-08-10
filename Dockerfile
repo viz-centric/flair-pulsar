@@ -8,8 +8,9 @@ COPY tsconfig*.json /flair-pulsar/
 COPY tslint.json /flair-pulsar/
 COPY nest-cli.json /flair-pulsar/
 COPY docker /flair-pulsar/
-COPY dist /flair-pulsar/dist/
+COPY dist /flair-pulsar/src/
 COPY config /flair-pulsar/config/
+COPY src/resources/proto /flair-pulsar/src/resources/proto
 
 WORKDIR /flair-pulsar/
 
@@ -21,8 +22,6 @@ VOLUME [ "/flair-pulsar/config" ]
 
 EXPOSE 5031
 EXPOSE 3000
-
-WORKDIR /flair-pulsar/
 
 RUN groupadd -g 999 flairuser && \
     useradd --shell /bin/bash --create-home --home /home/flairuser -r -u 999 -g flairuser flairuser
