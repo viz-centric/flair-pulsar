@@ -6,6 +6,7 @@ yarn-error.log*
 
 .idea/
 logs/
+dist/
 
 # Runtime data
 pids
