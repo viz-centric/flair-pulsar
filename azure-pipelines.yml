@@ -1,0 +1,81 @@
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+trigger:
+  branches:
+    include:
+    - master
+
+variables:
+  imageName: 'flair-pulsar'
+  major: 1
+  minor: 0
+  patch: 0
+
+pr:
+  branches:
+    include:
+    - master
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+
+- script: |
+    docker-compose -f ./docker-compose.yml up -d
+    sleep 5
+    docker ps -a
+  displayName: 'Preparing environment'
+
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    command: install
+
+- task: Npm@1
+  displayName: 'npm test'
+  inputs:
+    command: custom
+    customCommand: 'run format'
+
+- script: |
+    docker ps -a
+    ls -a
+    npm migrations
+  displayName: 'Running migrations'
+
+- task: Npm@1
+  displayName: 'npm test'
+  inputs:
+    command: custom
+    customCommand: 'test'
+
+- task: Npm@1
+  displayName: 'npm run test:e2e'
+  inputs:
+    command: custom
+    customCommand: 'run test:e2e'
+
+- task: Npm@1
+  displayName: 'npm build'
+  inputs:
+    command: custom
+    customCommand: 'run build'
+
+- script: |
+    docker build -t flairbi/$(imageName):v$(major).$(minor).$(patch) .
+  displayName: 'Build Docker image'
+
+- script: |
+    docker login -u vizcentric -p $DOCKER_PASSWORD
+    docker push flairbi/$(imageName):v$(major).$(minor).$(patch)
+    docker tag flairbi/$(imageName):v$(major).$(minor).$(patch) flairbi/$(imageName):latest
+    docker push flairbi/$(imageName):latest
+  env:
+    DOCKER_PASSWORD: $(dockerPassword)
+  displayName: 'Push Docker image'

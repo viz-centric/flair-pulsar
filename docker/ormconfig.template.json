@@ -1,9 +1,9 @@
 {
   "type": "postgres",
-  "host": "localhost",
-  "port": 5190,
-  "username": "postgres",
-  "password": "admin",
+  "host": "$DATABASE_HOST",
+  "port": $DATABASE_PORT,
+  "username": "$DATABASE_USERNAME",
+  "password": "$DATABASE_PASSWORD",
   "database": "pulsar_db",
   "entities": ["./src/**/*.entity{.ts,.js}"],
   "synchronize": false,

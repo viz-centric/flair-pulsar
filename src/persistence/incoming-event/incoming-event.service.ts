@@ -1,15 +1,14 @@
 import {Injectable} from '@nestjs/common';
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {IncomingEvent} from "./incoming-event.entity";
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {IncomingEvent} from './incoming-event.entity';
 
 @Injectable()
 export class IncomingEventService {
   constructor(
     @InjectRepository(IncomingEvent)
-    private readonly incomingEventRepository: Repository<IncomingEvent>
-  ) {
-  }
+    private readonly incomingEventRepository: Repository<IncomingEvent>,
+  ) {}
 
   async findAll(): Promise<IncomingEvent[]> {
     return await this.incomingEventRepository.find();

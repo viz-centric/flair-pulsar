@@ -1,6 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {RpcServerService} from './rpc-server.service';
-import {AppModule} from "../../app.module";
+import {AppModule} from '../../app.module';
 
 describe('RpcServerService', () => {
   let service: RpcServerService;
