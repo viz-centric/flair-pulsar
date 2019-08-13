@@ -10,12 +10,16 @@ import {PulseService} from './rpc/pulse/pulse.service';
 import {RpcServerService} from './rpc/server/rpc-server.service';
 import {RpcConfigService} from './rpc/config/rpc-config.service';
 import {DatabaseService} from './persistence/database/database.service';
+import { DispatcherModule } from './dispatcher/dispatcher.module';
+import { BotModule } from './bot/bot.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     TypeOrmModule.forFeature([IncomingEvent]),
     RpcClientModule,
+    DispatcherModule,
+    BotModule,
   ],
   controllers: [AppController],
   providers: [
