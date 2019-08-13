@@ -4,6 +4,7 @@ import {AppModule} from '../../app.module';
 import {IncomingEventService} from '../../persistence/incoming-event/incoming-event.service';
 import {IncomingEvent} from '../../persistence/incoming-event/incoming-event.entity';
 import {IncomingEventLogType} from '../../persistence/incoming-event/incoming-event-log-type';
+import {PulseRequest} from '../dto/pulse-request.interface';
 
 describe('PulseService', () => {
   let service: PulseService;
@@ -32,10 +33,10 @@ describe('PulseService', () => {
   });
 
   it('should save incoming event when calling handlePulse method', async () => {
-    let currentTime = new Date();
-    let itemId: number = currentTime.getTime();
-    let summary = `some summary ${itemId}`;
-    let request = createPulseRequest(itemId);
+    const currentTime = new Date();
+    const itemId: number = currentTime.getTime();
+    const summary = `some summary ${itemId}`;
+    const request = createPulseRequest(itemId);
 
     await service.handlePulse(
       request.pulseConfig,
@@ -43,18 +44,18 @@ describe('PulseService', () => {
       request.pulseBody,
     );
 
-    let incomingEvents: IncomingEvent[] = await incomingEventService.findAll();
-    let matchingEvents = incomingEvents.filter(
+    const incomingEvents: IncomingEvent[] = await incomingEventService.findAll();
+    const matchingEvents = incomingEvents.filter(
       item => item.summary === summary,
     );
 
     expect(matchingEvents.length).toBe(1);
 
-    let matchingEvent = matchingEvents[0];
+    const matchingEvent = matchingEvents[0];
 
     expect(+matchingEvent.id).toBeGreaterThan(0);
     expect(matchingEvent.summary).toEqual(summary);
-    expect(matchingEvent.eventData['custom']).toEqual('field');
+    expect(matchingEvent.eventData[`custom`]).toEqual('field');
     expect(matchingEvent.logType).toEqual(IncomingEventLogType.ON);
     expect(matchingEvent.ttl).toEqual(111);
     expect(matchingEvent.serviceName).toEqual('my service');
@@ -69,8 +70,8 @@ describe('PulseService', () => {
     );
   });
 
-  function createPulseRequest(itemId: number) {
-    let eventTimeDate: Date = new Date();
+  function createPulseRequest(itemId: number): PulseRequest {
+    const eventTimeDate: Date = new Date();
     return {
       pulseHeader: {
         service: 'my service',
@@ -81,7 +82,7 @@ describe('PulseService', () => {
       },
       pulseBody: {
         summary: `some summary ${itemId}`,
-        eventData: { custom: 'field' },
+        eventData: new Map([['custom', 'field']]),
       },
       pulseConfig: {
         log: true,

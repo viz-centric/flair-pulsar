@@ -4,16 +4,19 @@ import {msg} from '../../utils/logging/logging.service';
 import {IncomingEventService} from '../../persistence/incoming-event/incoming-event.service';
 import {Injectable} from '@nestjs/common';
 import {DateUtils} from '../../utils/date-utils';
+import {PulseConfig} from '../dto/pulse-config.interface';
+import {PulseHeader} from '../dto/pulse-header.interface';
+import {PulseBody} from '../dto/pulse-body.interface';
 
 @Injectable()
 export class PulseService {
   constructor(private readonly incomingMessageService: IncomingEventService) {}
 
-  async handlePulse(pulseConfig: any, pulseHeader: any, pulseBody: any) {
-    let seconds: number = pulseHeader.eventTime.seconds;
-    let nanos: number = pulseHeader.eventTime.nanos;
+  async handlePulse(pulseConfig: PulseConfig, pulseHeader: PulseHeader, pulseBody: PulseBody) {
+    const seconds: number = pulseHeader.eventTime.seconds;
+    const nanos: number = pulseHeader.eventTime.nanos;
 
-    let event = new IncomingEvent();
+    const event = new IncomingEvent();
     event.summary = pulseBody.summary;
     event.eventTime = DateUtils.toDateFromSecondsAndNanos(seconds, nanos);
     event.serviceName = pulseHeader.service;
@@ -24,7 +27,7 @@ export class PulseService {
     event.eventData = pulseBody.eventData;
 
     try {
-      let savedMessage = await this.incomingMessageService.save(event);
+      const savedMessage = await this.incomingMessageService.save(event);
       msg(`incoming message saved`, savedMessage);
     } catch (e) {
       msg(`failed saving incoming message`, event, e);

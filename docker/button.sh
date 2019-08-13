@@ -11,6 +11,8 @@ sed \
 
 cat ormconfig.json
 
+export NODE_ENV=production
+
 echo "Applying migrations"
 
 npm run migrations
