@@ -1,38 +1,25 @@
-import {Injectable} from '@nestjs/common';
-import {Client} from 'grpc';
+import {Injectable, OnModuleInit} from '@nestjs/common';
 import {msg} from '../../utils/logging/logging.service';
-import {RpcConfigService} from '../config/rpc-config.service';
+import {PulsarService} from '../dto/pulsar-service.interface';
+import {Client, ClientGrpc} from '@nestjs/microservices';
+import {grpcClientOptions} from '../config/grpc-client.options';
+import {PulseRequest} from '../dto/pulse-request.interface';
+import {PulseResponse} from '../dto/pulse-response.interface';
 
 @Injectable()
-export class RpcClientService {
-  private client: Client;
+export class RpcClientService implements OnModuleInit {
+  @Client(grpcClientOptions)
+  private readonly client: ClientGrpc;
+  private pulsarService: PulsarService;
 
-  constructor(private readonly rpcConfig: RpcConfigService) {}
-
-  createClient() {
-    let ProtoPackage = this.rpcConfig.getProtoPackage('PulsarService');
-    let serverCredentials = this.rpcConfig.createClientCredentials();
-    let rpcUrl = this.rpcConfig.getRpcUrl();
-    this.client = new ProtoPackage(rpcUrl, serverCredentials);
-
-    msg(`gRPC client created on ${rpcUrl}`);
-    return this.client;
+  onModuleInit(): any {
+    msg(`gRPC client created`);
+    this.pulsarService = this.client.getService<PulsarService>('PulsarService');
   }
 
-  publishPulse(publishPulseRequest: Object) {
-    return new Promise((success, reject) => {
-      let callback = (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          success(data);
-        }
-      };
-      this.client['publishPulse'](publishPulseRequest, callback);
-    });
-  }
-
-  stop() {
-    this.client.close();
+  publishPulse(request: PulseRequest): PulseResponse {
+    msg('Publishing pulse request', request);
+    return this.pulsarService.publishPulse(request)
+      .toPromise();
   }
 }

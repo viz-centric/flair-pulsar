@@ -1,20 +1,19 @@
 import {Test, TestingModule} from '@nestjs/testing';
-import {RpcServerService} from './rpc-server.service';
+import {PulseController} from './pulse.controller';
 import {AppModule} from '../../app.module';
 
-describe('RpcServerService', () => {
-  let service: RpcServerService;
+describe('Pulse Controller', () => {
+  let controller: PulseController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [],
     }).compile();
 
-    service = module.get<RpcServerService>(RpcServerService);
+    controller = module.get<PulseController>(PulseController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 });
