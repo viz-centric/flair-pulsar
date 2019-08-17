@@ -6,20 +6,23 @@ import {IncomingEventService} from '../src/persistence/incoming-event/incoming-e
 import {IncomingEvent} from '../src/persistence/incoming-event/incoming-event.entity';
 import {IncomingEventLogType} from '../src/persistence/incoming-event/incoming-event-log-type';
 import {PromiseUtils} from '../src/utils/promise-utils';
+import {grpcClientOptions} from '../src/rpc/config/grpc-client.options';
 
-describe('AppController (e2e)', () => {
+describe('Pulsar gRPC (e2e)', () => {
   let app;
+  let moduleFixture: TestingModule;
   let rpcClientService: RpcClientService;
   let databaseService: DatabaseService;
   let incomingEventService: IncomingEventService;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [],
+      providers: [RpcClientService],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestMicroservice(grpcClientOptions);
+    await app.listenAsync();
     await app.init();
 
     rpcClientService = moduleFixture.get<RpcClientService>(RpcClientService);
@@ -28,7 +31,7 @@ describe('AppController (e2e)', () => {
   });
 
   afterEach(async () => {
-    return await databaseService.close();
+    await app.close();
   });
 
   it('should return empty pulse when pulse request succeeded', async () => {
@@ -87,7 +90,7 @@ describe('AppController (e2e)', () => {
       },
       pulseBody: {
         summary: `some summary ${itemId}`,
-        eventData: new Map([['custom', 'field']]),
+        eventData: {custom: 'field'},
       },
       pulseConfig: {
         log: true,

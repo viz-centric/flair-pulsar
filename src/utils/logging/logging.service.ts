@@ -39,4 +39,5 @@ export class LoggingService {
   }
 }
 
-export const msg = LoggingService.msg;
+// export const msg = LoggingService.msg;
+export const msg = console.log;

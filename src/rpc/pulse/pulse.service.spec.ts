@@ -82,7 +82,7 @@ describe('PulseService', () => {
       },
       pulseBody: {
         summary: `some summary ${itemId}`,
-        eventData: new Map([['custom', 'field']]),
+        eventData: {custom: 'field'},
       },
       pulseConfig: {
         log: true,
