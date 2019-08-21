@@ -8,7 +8,7 @@ export class BotService extends ActivityHandler {
     constructor() {
         super();
         this.onMessage(async (context, next) => {
-            await context.sendActivity(`You said '${ context.activity.text }'`);
+            await context.sendActivity('Thanks for texting me but now i cannot answer you.. I can only send proactive messages');
             await next();
         });
 
@@ -16,9 +16,20 @@ export class BotService extends ActivityHandler {
             this.addConversationReference(context.activity);
             await next();
         });
+
+        this.onMembersAdded(async (context, next) => {
+           this.sendWelcomeMessage(context);
+        });
     }
-    addConversationReference(activity) {
+    private addConversationReference(activity) {
         const conversationReference = TurnContext.getConversationReference(activity);
         this.conversationReferences[conversationReference.conversation.id] = conversationReference;
+    }
+    private async sendWelcomeMessage(context) {
+        for (const idx in context.activity.membersAdded) {
+            if (context.activity.membersAdded[idx].id !== context.activity.recipient.id) {
+                await context.sendActivity(`Hello, I'm flair bot. I will send proactive messages for critical incidents`);
+            }
+        }
     }
 }
