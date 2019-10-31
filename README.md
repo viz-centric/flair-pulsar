@@ -39,3 +39,7 @@ npm run test
 ```bash
 npm run test:e2e
 ```
+
+## Currently in Beta version. Stable version release Q2-2020
+
+Flair pulsar stable version release early Q2-2020, along with project ML engine built on top of Apache Spark.  
